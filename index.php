@@ -14,6 +14,7 @@
 		<style>
 			.material-icons { font-size: 125%; vertical-align: middle; margin-top: -5px; }
 			img { max-width: 100% }
+			.card { box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1) }
 			button:focus { position: relative; z-index: 1 }
 		</style>
 
@@ -40,7 +41,8 @@
 					</div>
 					<div class="list-group">
 						<button type="button" class="list-group-item list-group-item-action"><strong>Guest User</strong><br>Log in to your account</button>
-						<button type="button" class="list-group-item list-group-item-action"><i class="material-icons mr-2">burst_mode</i>Your designs</button>
+						<a href="login.php" class="list-group-item list-group-item-action"><i class="material-icons mr-2">burst_mode</i>Your designs</a>
+						<a href="register.php" class="list-group-item list-group-item-action"><i class="material-icons mr-2">person</i>Register</a>
 						<button type="button" class="list-group-item list-group-item-action"><i class="material-icons mr-2">save</i>Save design</button>
 					</div>
 				</div>
