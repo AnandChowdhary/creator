@@ -1,4 +1,6 @@
 var views = {
+	product: null,
+	color: null,
 	Front: {
 		canvas: [],
 		image: null,
@@ -20,18 +22,24 @@ var views = {
 		colors: null
 	}
 };
-var currentView = null, currentProduct = null, currentColor = null;
+var currentView = null;
 var canvas = new fabric.Canvas("c");
 
 canvas.setWidth(document.querySelector(".canvas-card").offsetWidth - 20);
 canvas.setHeight(window.innerHeight - 75);
 
+if (localStorage.getItem("savedDesign")) {
+	views = JSON.parse(localStorage.getItem("savedDesign"));
+}
+
 function saveCanvas() {
-	console.log(canvas.toObject());
+	views[currentView]["canvas"] = canvas.toObject().objects;
+	$("[name='code']").val(JSON.stringify(views));
+	localStorage.setItem("savedDesign", JSON.stringify(views));
 }
 
 function addText() {
-	var text = $("#textInput").val();
+	var text = $("#textContent").val();
 	text = text.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "");
 	if (text) {
 		canvas.add(new fabric.IText(text, {
@@ -41,13 +49,13 @@ function addText() {
 		}));
 	}
 	$("#textModal .modal-footer .btn-secondary").click();
-	$("#textInput").val("");
+	$("#textContent").val("");
 }
 
 function updateFontPreview() {
-	$(".preview-div").html($("#textInput").val());
+	$(".preview-div").html($("#textContent").val());
 	$(".preview-div").css("font-family", $("#fontInput").val());
-	if ($("#textInput").val()) {
+	if ($("#textContent").val()) {
 		$(".preview-panel").show();
 	} else {
 		$(".preview-panel").hide();
@@ -64,6 +72,10 @@ canvas.on("selection:cleared", function(options) {
 });
 $(".element-editor").hide();
 
+canvas.on("object:added", saveCanvas);
+canvas.on("object:modified", saveCanvas);
+canvas.on("object:removed", saveCanvas);
+
 function deleteSelected() {
 	canvas.remove(canvas.getActiveObject());
 }
@@ -73,14 +85,18 @@ String.prototype.capitalize = function() {
 }
 
 function changeProduct(product) {
-	currentProduct = $("[name='productRadio']:checked").val();
+	views.product = $("[name='productRadio']:checked").val();
 	$(".view-types .list-group-item").each(function() {
-		$(this).find(".col-md-5").html("<img src='" + "images/" + currentProduct.toLowerCase() + "/" + $(this).attr("class").split(" ")[0].replace("viewbtn-", "").toLowerCase() + ".png" + "'>");
+		$(this).find(".col-md-5").html("<img src='" + "images/" + views.product.toLowerCase() + "/" + $(this).attr("class").split(" ")[0].replace("viewbtn-", "").toLowerCase() + ".png" + "'>");
 	});
 	$("#productModal .btn-secondary").click();
 	if (currentView) changeView(currentView);
 }
-changeProduct("tshirt");
+if (!views.product) {
+	changeProduct("tshirt");
+} else {
+	changeProduct(views.product);
+}
 
 function changeView(view) {
 	if (currentView) {
@@ -109,24 +125,36 @@ function insertImage() {
 };
 
 function changeColor() {
-	currentColor = $("[name='colorRadio']:checked").val();
+	views.color = $("[name='colorRadio']:checked").val();
 	refreshBg();
 	$("#colorModal .btn-secondary").click();
 }
-changeColor();
+if (!views.color) {
+	changeColor();
+}
 
 function refreshBg() {
-	fabric.Image.fromURL("images/" + currentProduct.toLowerCase() + "/" + currentView.toLowerCase() + ".png", function(img) {
+	fabric.Image.fromURL("images/" + views.product.toLowerCase() + "/" + currentView.toLowerCase() + ".png", function(img) {
 		img.set({
 			left: (canvas.width - img.width) / 2,
 			top: (canvas.height - img.height) / 2
 		});
 		var filter = new fabric.Image.filters.BlendColor({
-			color: currentColor,
+			color: views.color,
 			mode: "overlay"
 		});
 		img.filters.push(filter);
 		img.applyFilters();
 		canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
 	 });
+}
+
+function saveDesign() {
+	saveCanvas();
+	localStorage.removeItem("savedDesign");
+}
+
+function clearDesign() {
+	localStorage.removeItem("savedDesign");
+	window.location.reload();
 }

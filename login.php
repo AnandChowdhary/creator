@@ -5,7 +5,11 @@
 			$me = DB::queryFirstRow("SELECT * FROM users WHERE email=%s", $_POST["email"]);
 			if (password_verify($_POST["password"], $me["password"])) {
 				$_SESSION["user"] = $me;
-				header("Location: designs.php");
+				if (isset($_SESSION["saveDesign"])) {
+					header("Location: save.php");
+				} else {
+					header("Location: designs.php");
+				}
 			} else {
 				$error = "Incorrect email or password.";
 			}

@@ -32,7 +32,11 @@
 				"password" => password_hash($_POST["password"], PASSWORD_DEFAULT),
 				"created_at" => time()
 			]);
-			header("Location: login.php?message=Your+account+has+been+created.+You+can+log+in+now.");
+			if (isset($_SESSION["saveDesign"])) {
+				header("Location: save.php");
+			} else {
+				header("Location: login.php?message=Your+account+has+been+created.+You+can+log+in+now.");
+			}
 		}
 	}
 ?>

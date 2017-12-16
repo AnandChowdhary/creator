@@ -1,3 +1,4 @@
+<?php include "database.php"; ?>
 <!doctype html>
 <html lang="en">
 
@@ -22,11 +23,13 @@
 
 	<body class="p-3 bg-light">
 
-		<div class="container-fluid mt-3 mb-3">
+		<div class="container mt-3 mb-3" style="max-width: 1500px">
 			<div class="row">
 				<div class="col-md-3">
 					<div class="card card-body mb-4 text-center">
-						Creator
+						<div>
+							<img alt="Melangebox" src="https://cdn.shopify.com/s/files/1/1836/6841/files/icon.png?7012573658297170903" style="height: 40px">
+						</div>
 					</div>
 					<div class="list-group mb-4">
 						<button type="button" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#productModal"><i class="material-icons mr-2">create</i>Change product</button>
@@ -38,13 +41,21 @@
 						<!-- <button type="button" class="list-group-item list-group-item-action"><i class="material-icons mr-2">filter_vintage</i>Insert graphics</button> -->
 						<!-- <button type="button" class="list-group-item list-group-item-action"><i class="material-icons mr-2">camera_alt</i>Click picture</button> -->
 						<button type="button" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#nameNumberModal"><i class="material-icons mr-2">format_list_numbered</i>Names &amp; numbers</button>
+						<button type="button" onclick="clearDesign()" class="list-group-item list-group-item-action"><i class="material-icons mr-2">delete_forever</i>Reset design</button>
 					</div>
-					<div class="list-group">
-						<button type="button" class="list-group-item list-group-item-action"><strong>Guest User</strong><br>Log in to your account</button>
-						<a href="login.php" class="list-group-item list-group-item-action"><i class="material-icons mr-2">burst_mode</i>Your designs</a>
-						<a href="register.php" class="list-group-item list-group-item-action"><i class="material-icons mr-2">person</i>Register</a>
-						<button type="button" class="list-group-item list-group-item-action"><i class="material-icons mr-2">save</i>Save design</button>
-					</div>
+					<?php if ($_SESSION["user"]) { ?>
+						<div class="list-group">
+							<button type="button" class="list-group-item list-group-item-action"><strong><?= $_SESSION["user"]["name"] ?></strong><br><?= $_SESSION["user"]["company"] ? $_SESSION["user"]["company"] : "Profile" ?></button>
+							<a href="designs.php" class="list-group-item list-group-item-action"><i class="material-icons mr-2">burst_mode</i>My designs &amp; orders</a>
+							<a href="logout.php" class="list-group-item list-group-item-action"><i class="material-icons mr-2">burst_mode</i>Log out</a>
+						</div>
+					<?php } else { ?>
+						<div class="list-group">
+							<button type="button" class="list-group-item list-group-item-action"><strong>Guest User</strong><br>Log in to save this design</button>
+							<a href="login.php" class="list-group-item list-group-item-action"><i class="material-icons mr-2">burst_mode</i>Log in</a>
+							<a href="register.php" class="list-group-item list-group-item-action"><i class="material-icons mr-2">person</i>Register</a>
+						</div>
+					<?php } ?>
 				</div>
 				<div class="col-md">
 					<div class="card canvas-card">
@@ -92,7 +103,35 @@
 							</div>
 						</button>
 					</div>
-					<button class="btn btn-secondary btn-block" onclick="saveCanvas();">Continue to pricing<i class="material-icons ml-2">arrow_forward</i></button>
+					<button type="button" data-toggle="modal" data-target="#saveModal" class="btn btn-secondary btn-block mb-3" onclick="saveDesign();"><i class="material-icons mr-2">save</i>Save this design</button>
+					<button class="btn btn-primary btn-block" onclick="saveCanvas();">Order this design<i class="material-icons ml-2">arrow_forward</i></button>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="saveModal" tabindex="-1" role="dialog" aria-labelledby="saveModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<form method="post" action="save.php">
+						<div class="modal-header">
+							<h5 class="modal-title" id="saveModalLabel">Save this design</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<p>After saving this design, you will be able to share it with your friends and place orders.</p>
+							<textarea name="code" style="display: none"></textarea>
+							<div class="form-group">
+								<label for="designName">Name</label>
+								<input type="text" class="form-control" id="designName" name="design_name" placeholder="Enter a name for this design" required>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+							<button type="submit" class="btn btn-primary">Save this design</button>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -109,8 +148,8 @@
 					<div class="modal-body">
 						<form>
 							<div class="form-group">
-								<label for="textInput">Content</label>
-								<input type="text" class="form-control" id="textInput" placeholder="Enter your text content" onkeyup="updateFontPreview();">
+								<label for="textContent">Content</label>
+								<input type="text" class="form-control" id="textContent" placeholder="Enter your text content" onkeyup="updateFontPreview();">
 							</div>
 							<div class="form-group">
 								<label for="fontInput">Font</label>
