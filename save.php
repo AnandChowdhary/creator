@@ -2,7 +2,6 @@
 	include "database.php";
 	if (!isset($_SESSION["user"]) && !isset($_SESSION["saveDesign"])) {
 		$_SESSION["saveDesign"] = $_POST;
-		var_dump($_SESSION["saveDesign"]);
 	}
 	if (!isset($_SESSION["user"])) {
 		header("Location: login.php?message=Please+log+in+or+register+to+save+this+design.");

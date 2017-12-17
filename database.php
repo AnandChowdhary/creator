@@ -1237,9 +1237,15 @@ function obfuscate_email($email)
     return substr($name,0, $len) . str_repeat('*', $len) . "@" . end($em);   
 }
 
-DB::$user = "root";
-DB::$password = "root";
-DB::$dbName = "creator";
+if ($_SERVER["SERVER_NAME"] == "localhost") {
+  DB::$user = "root";
+  DB::$password = "root";
+  DB::$dbName = "creator";
+} else {
+  DB::$user = "fabric_creator";
+  DB::$password = "anand01";
+  DB::$dbName = "fabric_creator";
+}
 
 session_name("creatorAuth");
 session_start();

@@ -34,7 +34,6 @@ if (localStorage.getItem("savedDesign")) {
 
 function saveCanvas() {
 	views[currentView]["canvas"] = canvas.toObject().objects;
-	$("[name='code']").val(JSON.stringify(views));
 	localStorage.setItem("savedDesign", JSON.stringify(views));
 }
 
@@ -151,8 +150,8 @@ function refreshBg() {
 
 function saveDesign() {
 	saveCanvas();
+	$("[name='code']").val(JSON.stringify(views));
 	$("[name='image']").val(canvas.lowerCanvasEl.toDataURL("png"));
-	console.log($("[name='image']").val());
 	localStorage.removeItem("savedDesign");
 }
 
