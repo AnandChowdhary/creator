@@ -29,7 +29,7 @@
 				"created_at" => time()
 			]);
 			$_SESSION["saveDesign"] = null;
-			header("Location: designs.php");
 		}
+		header("Location: designs.php");
 	}
 ?>

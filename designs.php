@@ -38,6 +38,7 @@
 								<h1 class="h4 mt-3 ml-3">🎨 &nbsp;My Designs</h1>
 							</div>
 							<div class="col text-right">
+								<a href="upload.php" class="btn btn-secondary mr-3 mt-2">Upload design</a>
 								<a href="index.php" class="btn btn-primary mr-3 mt-2">Create new design</a>
 							</div>
 						</div>
@@ -54,17 +55,22 @@
 							</thead>
 							<tbody>
 								<?php
-									$designs = DB::query("SELECT id, name, slug, created_at FROM designs WHERE owner=%s", $_SESSION["user"]["id"]);
+									$designs = DB::query("SELECT * FROM designs WHERE owner=%s", $_SESSION["user"]["id"]);
 									if (sizeof($designs) == 0) {
 								?>
 								<td colspan="42" class="text-center pt-5 pb-5">You have not saved any designs yet. 😞<br><br><a href="index.php" class="btn btn-primary mr-3 mt-2">Start designing!</a></td>
 								<?php
 									}
 									foreach ($designs as $design) {
+										if (strpos($design["name"], "MANUAL_UPLOAD_") !== false) {
+											$manual = 1;
+										} else {
+											$manual = 0;
+										}
 								?>
 								<tr>
-									<td><a href="index.php?slug=<?= $design["slug"] ?>"><?= $design["slug"] ?></a></td>
-									<td><?= $design["name"]; ?></td>
+									<td><a target="_blank" href="<?= $manual == 1 ? $design["code"] : "index.php?slug=" . $design["slug"] ?>"><?= $design["slug"] ?></a></td>
+									<td><?= $manual == 1 ? substr($design["name"], 14, strlen($design["name"])) : $design["name"]; ?></td>
 									<td><?= date("d-M-Y H:i a", $design["created_at"]) ?></td>
 									<td>Never ordered</td>
 									<td><a href="delete.php?id=<?= $design["id"] ?>" class="text-danger"><i class="material-icons mr-2">delete_forever</i>Delete</a></td>

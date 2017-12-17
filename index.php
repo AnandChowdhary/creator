@@ -37,9 +37,8 @@
 					</div>
 					<div class="list-group mb-4">
 						<button type="button" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#textModal"><i class="material-icons mr-2">text_fields</i>Add text</button>
+						<!-- <button type="button" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#graphicsModal" onclick="loadGraphics()"><i class="material-icons mr-2">filter_vintage</i>Insert graphic</button> -->
 						<button type="button" class="list-group-item list-group-item-action "data-toggle="modal" data-target="#imageModal"><i class="material-icons mr-2">insert_photo</i>Upload image</button>
-						<!-- <button type="button" class="list-group-item list-group-item-action"><i class="material-icons mr-2">filter_vintage</i>Insert graphics</button> -->
-						<!-- <button type="button" class="list-group-item list-group-item-action"><i class="material-icons mr-2">camera_alt</i>Click picture</button> -->
 						<button type="button" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#nameNumberModal"><i class="material-icons mr-2">format_list_numbered</i>Names &amp; numbers</button>
 						<button type="button" onclick="clearDesign()" class="list-group-item list-group-item-action"><i class="material-icons mr-2">delete_forever</i>Reset design</button>
 					</div>
@@ -131,6 +130,27 @@
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 							<button type="submit" class="btn btn-primary">Save this design</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="graphicsModal" tabindex="-1" role="dialog" aria-labelledby="graphicsModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<form method="post" action="save.php">
+						<div class="modal-header">
+							<h5 class="modal-title" id="graphicsModalLabel">Insert graphics</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body text-center">
+							<div class="row mb-3 graphic-body"></div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 						</div>
 					</form>
 				</div>

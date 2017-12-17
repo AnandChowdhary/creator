@@ -159,3 +159,24 @@ function clearDesign() {
 	localStorage.removeItem("savedDesign");
 	window.location.reload();
 }
+
+function loadGraphics() {
+	$.get("graphics.php", function(data) {
+		data.forEach(function(elt) {
+			$(".graphic-body").append('<div class="col-4 col-md-3 mt-3"><img alt="" src="images/graphics/' + elt + '"><button type="button" onclick="insertSvg(\'images/graphics/' + elt + '\');" data-dismiss="modal" class="btn btn-primary btn-sm">Insert</button></div>');
+		});
+	});
+}
+
+function insertSvg(url) {
+	// fabric.loadSVGFromURL(url, function(svg) {
+	// 	console.log(svg);
+	// 	// oImg.scaleToWidth(canvas.width / 2.5);
+	// });
+	// fabric.loadSVGFromURL(url, function(objects, options) { 
+	// 	var dollars = fabric.util.groupSVGElements(objects, options);
+	// 	canvas.add(dollars); 
+	// 	canvas.calcOffset();
+	// 	canvas.renderAll();
+	// }); 	
+}
