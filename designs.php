@@ -48,12 +48,13 @@
 									<th>Name</th>
 									<th>Created</th>
 									<th>Last Order</th>
+									<th>Delete</th>
 									<th>Order</th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php
-									$designs = DB::query("SELECT name, slug, created_at FROM designs WHERE owner=%s", $_SESSION["user"]["id"]);
+									$designs = DB::query("SELECT id, name, slug, created_at FROM designs WHERE owner=%s", $_SESSION["user"]["id"]);
 									if (sizeof($designs) == 0) {
 								?>
 								<td colspan="42" class="text-center pt-5 pb-5">You have not saved any designs yet. 😞<br><br><a href="index.php" class="btn btn-primary mr-3 mt-2">Start designing!</a></td>
@@ -62,11 +63,12 @@
 									foreach ($designs as $design) {
 								?>
 								<tr>
-									<td><a href="view.php?slug=<?= $design["slug"] ?>"><?= $design["slug"] ?></a></td>
+									<td><a href="index.php?slug=<?= $design["slug"] ?>"><?= $design["slug"] ?></a></td>
 									<td><?= $design["name"]; ?></td>
 									<td><?= date("d-M-Y H:i a", $design["created_at"]) ?></td>
 									<td>Never ordered</td>
-									<td><a href="#">Order Now</a></td>
+									<td><a href="delete.php?id=<?= $design["id"] ?>" class="text-danger"><i class="material-icons mr-2">delete_forever</i>Delete</a></td>
+									<td><a href="#"><i class="material-icons mr-2">shopping_cart</i>Order Now</a></td>
 								</tr>
 								<?php } ?>
 							</tbody>
@@ -99,9 +101,6 @@
 		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-		<script src="fabric.js"></script>
-		<script src="https://ucarecdn.com/libs/widget/3.2.1/uploadcare.min.js" charset="utf-8"></script>
-		<script src="creator.js"></script>
 		<script>
 			$("[data-toggle='tooltip']").tooltip();
 		</script>

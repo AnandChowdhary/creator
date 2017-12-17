@@ -122,6 +122,7 @@
 						<div class="modal-body">
 							<p>After saving this design, you will be able to share it with your friends and place orders.</p>
 							<textarea name="code" style="display: none"></textarea>
+							<textarea name="image" style="display: none"></textarea>
 							<div class="form-group">
 								<label for="designName">Name</label>
 								<input type="text" class="form-control" id="designName" name="design_name" placeholder="Enter a name for this design" required>
@@ -341,6 +342,16 @@
 		<script src="creator.js"></script>
 		<script>
 			$("[data-toggle='tooltip']").tooltip();
+			<?php if ($_GET["slug"]) {
+				$designCode = DB::queryFirstRow("SELECT * FROM designs WHERE slug=%s", $_GET["slug"]); ?>
+			views = JSON.parse('<?= $designCode["code"]; ?>');
+			canvas.loadFromJSON(JSON.stringify(views[currentView]["canvas"].length > 0 ? {
+				version: "2.0.0-rc.3",
+				objects: views[currentView]["canvas"]
+			} : []));
+			refreshBg();
+			saveCanvas();
+			<?php } ?>
 		</script>
 	</body>
 

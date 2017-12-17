@@ -151,6 +151,8 @@ function refreshBg() {
 
 function saveDesign() {
 	saveCanvas();
+	$("[name='image']").val(canvas.lowerCanvasEl.toDataURL("png"));
+	console.log($("[name='image']").val());
 	localStorage.removeItem("savedDesign");
 }
 
