@@ -26,7 +26,7 @@ var currentView = null;
 var canvas = new fabric.Canvas("c");
 
 canvas.setWidth(document.querySelector(".canvas-card").offsetWidth - 20);
-canvas.setHeight(window.innerHeight - 75);
+canvas.setHeight(window.innerHeight - 125);
 
 if (localStorage.getItem("savedDesign")) {
 	views = JSON.parse(localStorage.getItem("savedDesign"));
@@ -157,7 +157,7 @@ function saveDesign() {
 
 function clearDesign() {
 	localStorage.removeItem("savedDesign");
-	window.location.reload();
+	window.location.href = "index.php";
 }
 
 function loadGraphics() {

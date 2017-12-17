@@ -1,5 +1,8 @@
 <?php
 	include "database.php";
+	if (!isset($_SESSION["user"])) {
+		header("Location: login.php?message=You+must+be+logged+in+to+see+this+page.");
+	}
 	if ($_POST) {
 		if (isset($_POST["designName"]) && isset($_POST["imageUpload"])) {
 			$slug = substr(md5($_SESSION["user"]["id"] . $_POST["designName"] . time()), 0, 6);
@@ -25,20 +28,51 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 
-		<title>Login &ndash; Creator</title>
+		<title>Upload design &ndash; Creator</title>
 
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<style>
 			.material-icons { font-size: 110%; vertical-align: middle; margin-top: -3px; }
 			img { max-width: 100% }
-			.card { box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1) }
+			.card, .shadow { box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1) }
 			button:focus { position: relative; z-index: 1 }
 		</style>
 
 	</head>
 
-	<body class="p-3 bg-light">
+	<body class="bg-light">
+
+		<nav class="navbar navbar-expand-lg navbar-light bg-white shadow">
+			<span class="navbar-brand">Melangebox</span>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="designs.php">Designs</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="designs.php">Orders</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="index.php">Creator</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="upload.php">Upload</a>
+					</li>
+				</ul>
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<span class="nav-link"><?= $_SESSION["user"]["name"] ?><?= $_SESSION["user"]["company"] ? " (" . $_SESSION["user"]["company"] . ")" : "" ?></span>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="logout.php">Logout</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
 
 		<main id="content">
 			<div class="container pt-4 mt-4 pb-4">
@@ -51,6 +85,7 @@
 						<?php if ($error) { ?><div class="alert alert-danger mt-3" role="alert">
 							<?= $error; ?>
 						</div><?php } ?>
+						<p class="mt-3 text-muted">Only use this option if you have a ready-made design. If you want to create a new design, <a href="index.php">click here to start designing</a>.</p>
 						<form class="mt-1" method="post">
 							<div class="form-group">
 								<label for="designName">Name</label>

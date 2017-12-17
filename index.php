@@ -15,13 +15,44 @@
 		<style>
 			.material-icons { font-size: 125%; vertical-align: middle; margin-top: -5px; }
 			img { max-width: 100% }
-			.card { box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1) }
+			.card, .shadow { box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1) }
 			button:focus { position: relative; z-index: 1 }
 		</style>
 
 	</head>
 
-	<body class="p-3 bg-light">
+	<body class="bg-light">
+
+		<? if (isset($_SESSION["user"])) { ?><nav class="navbar navbar-expand-lg navbar-light bg-white shadow">
+			<span class="navbar-brand">Melangebox</span>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="designs.php">Designs</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="designs.php">Orders</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="index.php">Creator</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="upload.php">Upload</a>
+					</li>
+				</ul>
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<span class="nav-link"><?= $_SESSION["user"]["name"] ?><?= $_SESSION["user"]["company"] ? " (" . $_SESSION["user"]["company"] . ")" : "" ?></span>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="logout.php">Logout</a>
+					</li>
+				</ul>
+			</div>
+		</nav><? } ?>
 
 		<div class="container mt-3 mb-3" style="max-width: 1500px">
 			<div class="row">
@@ -103,7 +134,7 @@
 						</button>
 					</div>
 					<button type="button" data-toggle="modal" data-target="#saveModal" class="btn btn-secondary btn-block mb-3" onclick="saveDesign();"><i class="material-icons mr-2">save</i>Save this design</button>
-					<button class="btn btn-primary btn-block" onclick="saveCanvas();">Order this design<i class="material-icons ml-2">arrow_forward</i></button>
+					<button class="btn btn-primary btn-block" onclick="orderDesign();">Order this design<i class="material-icons ml-2">arrow_forward</i></button>
 				</div>
 			</div>
 		</div>

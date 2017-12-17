@@ -1,5 +1,8 @@
 <?php
 	include "database.php";
+	if (!isset($_SESSION["user"])) {
+		header("Location: login.php?message=You+must+be+logged+in+to+see+this+page.");
+	}
 ?>
 <!doctype html>
 <html lang="en">
@@ -17,21 +20,51 @@
 		<style>
 			.material-icons { font-size: 110%; vertical-align: middle; margin-top: -3px; }
 			img { max-width: 100% }
-			.card { box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1) }
+			.card, .shadow { box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1) }
 			button:focus { position: relative; z-index: 1 }
 		</style>
 
 	</head>
 
-	<body class="p-3 bg-light">
+	<body class="bg-light">
+
+		<nav class="navbar navbar-expand-lg navbar-light bg-white shadow">
+			<span class="navbar-brand">Melangebox</span>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="designs.php">Designs</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="designs.php">Orders</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="index.php">Creator</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="upload.php">Upload</a>
+					</li>
+				</ul>
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<span class="nav-link"><?= $_SESSION["user"]["name"] ?><?= $_SESSION["user"]["company"] ? " (" . $_SESSION["user"]["company"] . ")" : "" ?></span>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="logout.php">Logout</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
 
 		<main id="content">
-			<div class="container pb-4">
-				<nav class="nav justify-content-end mb-3">
-					<span class="nav-link"><?= $_SESSION["user"]["name"] ?> (<?= $_SESSION["user"]["company"] ?>)</span>
-					<a class="nav-link" href="logout.php">Logout</a>
-				</nav>
+			<div class="container pb-4 mt-5">
 				<div class="row justify-content-center">
+					<?php if ($_GET["message"]) { ?><div class="alert alert-info mt-3" role="alert">
+						<?= $_GET["message"]; ?>
+					</div><?php } ?>
 					<div class="col-md-12 card p-3">
 						<div class="row">
 							<div class="col">
@@ -74,7 +107,7 @@
 									<td><?= date("d-M-Y H:i a", $design["created_at"]) ?></td>
 									<td>Never ordered</td>
 									<td><a href="delete.php?id=<?= $design["id"] ?>" class="text-danger"><i class="material-icons mr-2">delete_forever</i>Delete</a></td>
-									<td><a href="#"><i class="material-icons mr-2">shopping_cart</i>Order Now</a></td>
+									<td><a href="order.php?id=<?= $design["id"] ?>"><i class="material-icons mr-2">shopping_cart</i>Order Now</a></td>
 								</tr>
 								<?php } ?>
 							</tbody>
@@ -86,16 +119,35 @@
 							<thead>
 								<tr>
 									<th>Order ID</th>
-									<th>Product</th>
+									<th>Product Name</th>
 									<th>Placed</th>
 									<th>Last Updated</th>
 									<th>Status</th>
 								</tr>
 							</thead>
 							<tbody>
+								<?php
+									$orders = DB::query("SELECT * FROM orders WHERE orderedby=%s", $_SESSION["user"]["id"]);
+									if (sizeof($orders) == 0) {
+								?>
+								<td colspan="42" class="text-center pt-5 pb-5">You have not placed any orders yet. 😞</td>
+								<?php
+									}
+									foreach ($orders as $order) {
+										if (strpos($order["name"], "MANUAL_UPLOAD_") !== false) {
+											$manual = 1;
+										} else {
+											$manual = 0;
+										}
+								?>
 								<tr>
-									<td colspan="42" class="text-center pt-5 pb-5">You have not placed any orders yet. 😞</td>
+									<td><a target="_blank" href="details.php?id=<?= $order["id"] ?>">MEBX-CR-<?= $order["id"] ?></a></td>
+									<td><?= DB::queryFirstRow("SELECT name FROM designs WHERE id=%s", $order["product"])["name"] ?></td>
+									<td><?= date("d-M-Y H:i a", $order["ordered_at"]) ?></td>
+									<td><?= date("d-M-Y H:i a", $order["ordered_at"]) ?></td>
+									<td><?= $order["status"] ?></td>
 								</tr>
+								<?php } ?>
 							</tbody>
 						</table>
 					</div>
